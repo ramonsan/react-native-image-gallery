@@ -87,7 +87,7 @@ export default class ViewPager extends PureComponent {
         });
     }
 
-    componentWillMount() {
+    componentDidMount() {
         this.gestureResponder = createResponder({
             onStartShouldSetResponder: (evt, gestureState) => true,
             onResponderGrant: this.onResponderGrant,
@@ -95,9 +95,6 @@ export default class ViewPager extends PureComponent {
             onResponderRelease: this.onResponderRelease,
             onResponderTerminate: this.onResponderRelease
         });
-    }
-
-    componentDidMount() {
         // FlatList is set to render at initialPage.
         // The scroller we use is not aware of this.
         // Let it know by simulating most of what happens in scrollToPage()
