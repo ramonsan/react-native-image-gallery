@@ -54,13 +54,28 @@ export default class TransformableImage extends PureComponent {
         };
     }
 
-    static getDerivedStateFromProps(nextProps) {
-        if (!sameImage(this.props.image, nextProps.image)) {
+    static getDerivedStateFromProps(nextProps, state) {
+        if (!sameImage(state.image, nextProps.image)) {
             // image source changed, clear last image's imageDimensions info if any
-            this.setState({ imageDimensions: nextProps.image.dimensions, keyAcumulator: this.state.keyAcumulator + 1 });
-            if (!nextProps.image.dimensions) { // if we don't have image dimensions provided in source
-                this.getImageSize(nextProps.image);
+            let { dimensions, source } = nextProps.image;
+            if (!dimensions) { // if we don't have image dimensions provided in source
+                if (source && source.uri) {
+                    Image.getSize(
+                        source.uri,
+                        (width, height) => {
+                            if (width && height) {
+                                dimensions = { width, height };
+                            }
+                        },
+                        () => {
+                            return { error: true };
+                        }
+                    );
+                } else {
+                    console.warn('react-native-image-gallery', 'Please provide dimensions of your local images');
+                }
             }
+            return { imageDimensions: dimensions, keyAcumulator: state.keyAcumulator + 1 };
         }
     }
 
