@@ -1,18 +1,21 @@
 declare module 'react-native-image-gallery' {
-  export interface GalleryTypes {
-    shouldScrollViewPager(evt: any, gestureState: any): boolean;
-    activeViewPagerResponder(evt: any, gestureState: any): void;
-    getImageTransformer(page: any): any;
-    getCurrentImageTransformer(): any;
-    getViewPagerInstance(): any;
-    onPageSelected(page: any): void;
-    onPageScrollStateChanged(state: any): void;
-    renderPage(pageData: any, pageId: any): any;
-    resetHistoryImageTransform(): void;
-    render(): any;
-  }
+  import React from 'react';
+  import { View } from 'react-native';
+  import PropTypes from 'prop-types';
+  import { Gallery as GalleryClass } from './src/Gallery';
 
-  const Gallery: GalleryTypes;
+  type InferPropTypes<
+    PropTypes,
+    DefaultProps = {},
+    Props = PropTypes.InferProps<PropTypes>
+    > = {
+      [Key in keyof Props]: Key extends keyof DefaultProps
+      ? Props[Key] | DefaultProps[Key]
+      : Props[Key]
+    };
+
+  type GalleryProps = InferPropTypes<typeof GalleryClass.propTypes, typeof GalleryClass.defaultProps>;
+  class Gallery extends React.PureComponent<GalleryProps> { }
 
   export default Gallery;
 }
